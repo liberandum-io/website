@@ -6,6 +6,7 @@ const withMDX = require('@next/mdx')();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true,
     domains: [
       'imagedelivery.net'
     ],
