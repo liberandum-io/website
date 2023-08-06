@@ -1,0 +1,207 @@
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Users
+
+model User {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String?
+  email          String   @unique
+  hashedPassword String?
+  role           String   @default("USER")
+
+  tokens              Token[]
+  sessions            Session[]
+  relationships       AnimalRelationship[]
+  partnerRelationship PartnerRelationship[]
+}
+
+model Session {
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Token {
+  id          String       @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  hashedToken String
+  type        TokenType
+  expiresAt   DateTime
+  sentTo      String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([hashedToken, type])
+}
+
+enum TokenType {
+  RESET_PASSWORD
+}
+
+// Generic
+
+// model Category {
+//   id       String     @id @default(cuid())
+//   name     String
+//   parentId String?
+//   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+//   children Category[] @relation("CategoryTree")
+// }
+
+// Animals
+
+enum AnimalStatusType {
+  PENDING
+  REHOMING
+  RESERVED
+  REHOMED
+  DECLINED
+  DELETED
+  UNKNOWN
+}
+
+enum AnimalSpecies {
+  CAT
+  DOG
+  RABBIT
+}
+
+enum AnimalSex {
+  MALE
+  FEMALE
+}
+
+model Animal {
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  species          AnimalSpecies
+  status           AnimalStatusType
+  name             String?
+  subtitle         String?
+  description      String?         
+  dateOfBirth      DateTime?        @db.Date
+  sex              AnimalSex?
+  breed            String?
+  colour           String?
+  medicalNeeds     Boolean?
+  friendlyToCats   Boolean?
+  friendlyToDogs   Boolean?
+  friendlyToHumans Int?
+  source           String?          @unique
+  locationName     String?
+  locationLat      Float?
+  locationLng      Float?
+
+  media         AnimalMedia[]
+  relationships AnimalRelationship[]
+}
+
+enum AnimalMediaType {
+  PENDING
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+model AnimalMedia {
+  id        String          @id @default(cuid())
+  animalId  String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  name      String?
+  type      AnimalMediaType
+  location  String
+  source    String?
+
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+}
+
+enum AnimalRelationshipType {
+  PREVIOUS_OWNER
+  OWNER
+}
+
+model AnimalRelationship {
+  id        String                 @id @default(cuid())
+  animalId  String
+  partnerId String?
+  userId    String?
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  type      AnimalRelationshipType
+
+  animal  Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  partner Partner? @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([animalId, partnerId, type])
+  @@unique([animalId, userId, type])
+}
+
+// Partners
+
+enum PartnerType {
+  CHARITY
+  SHELTER
+  RESCUE
+  OTHER
+}
+
+model Partner {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String
+  image        String?
+  description  String? 
+  type         PartnerType
+  subtitle     String?
+  locationName String?
+  locationLat  Float?
+  locationLng  Float?
+  website      String?     @unique
+  phone        String?
+  email        String?
+  parentId     String?
+
+  parent              Partner?              @relation("Branches", fields: [parentId], references: [id])
+  branches            Partner[]             @relation("Branches")
+  animalRelationship  AnimalRelationship[]
+  partnerRelationship PartnerRelationship[]
+}
+
+enum PartnerRelationshipType {
+  ADMIN
+  STANDARD
+}
+
+model PartnerRelationship {
+  id        String                  @id @default(cuid())
+  type      PartnerRelationshipType
+  userId    String
+  partnerId String?
+
+  partner Partner? @relation(fields: [partnerId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id])
+}

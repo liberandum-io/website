@@ -1,0 +1,75 @@
+{
+  "common": {
+    "project": {
+      "title": "Liberandum"
+    },
+    "menu": {
+      "home": "Home",
+      "about": "About",
+      "animals": "Animals",
+      "partners": "Partners",
+      "contact": "Contact"
+    },
+    "filters": {
+      "species": {
+        "title": "Species",
+        "value": {
+          "CAT": "Cat",
+          "DOG": "Dog",
+          "RABBIT": "Rabbit"
+        }
+      },
+      "status": {
+        "title": "Status",
+        "value": {
+          "REHOMING": "Rehoming",
+          "REHOMED": "Rehomed",
+          "RESERVED": "Reserved"
+        }
+      },
+      "friendlyToCats": {
+        "title": "Friendly to Cats",
+        "value": {
+          "true": "Yes",
+          "false": "No"
+        }
+      },
+      "friendlyToDogs": {
+        "title": "Friendly to Dogs",
+        "value": {
+          "true": "Yes",
+          "false": "No"
+        }
+      },
+      "friendlyToHumans": {
+        "title": "Friendly to Humans",
+        "value": {
+          "1": "Yes",
+          "8": "8+",
+          "16": "16+",
+          "18": "18+"
+        }
+      },
+      "colour": {
+        "title": "Colour"
+      },
+      "medicalNeeds": {
+        "title": "Has Medical Needs",
+        "value": {
+          "true": "Yes",
+          "false": "No"
+        }
+      },
+      "breed": {
+        "title": "Breed"
+      },
+      "sex": {
+        "title": "Sex",
+        "value": {
+          "MALE": "Male",
+          "FEMALE": "Female"
+        }
+      }
+    }
+  }
+}
