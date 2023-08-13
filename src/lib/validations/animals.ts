@@ -111,7 +111,7 @@ export const UpsertAnimal = z
       .optional(),
     images: z.object({
       name: z.string().optional(),
-      url: z.string(),
+      url: z.string().url(),
       source: z.string(),
     }).array().optional(),
   })
