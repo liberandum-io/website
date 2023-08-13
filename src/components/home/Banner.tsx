@@ -1,6 +1,9 @@
-import { AnimalSpecies, AnimalStatusType } from '@prisma/client';
+import { AnimalMediaType, AnimalSpecies, AnimalStatusType } from '@prisma/client';
 import Link from 'next-intl/link';
 import type { ReactNode } from 'react';
+import Image from '../core/Image';
+import GetUrlForAnimalMedia from '@/lib/GetUrlForAnimalMedia';
+import { getAnimals } from '@/app/api/animals/route';
 
 function Button(props: { href: string; children: ReactNode }) {
   return (
@@ -13,7 +16,20 @@ function Button(props: { href: string; children: ReactNode }) {
   );
 }
 
-export default function Banner() {
+export default async function Banner() {
+  const species = new Date().getDay() % 2 === 0
+    ? AnimalSpecies.DOG
+    : AnimalSpecies.CAT;
+
+  const animals = (await getAnimals({
+    where: {species},
+    take: 1,
+  })).animals;
+  const animal = animals.pop();
+  const image = animal?.media.filter(
+    (media) => media.type === AnimalMediaType.IMAGE
+  )[0]?.location ?? process.env.NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE!;
+
   return (
     <header className="my-20 relative container px-4 mx-auto">
       <div className="flex items-center flex-row">
@@ -45,22 +61,24 @@ export default function Banner() {
             </Button>
           </div>
         </div>
-        <div className="w-5/12 lg:w-6/12 pt-4 text-center">
+        {animal && <div className="w-5/12 lg:w-6/12 pt-4 text-center">
           <Link
-            href=""
+            href={`/animals/${animal.id}`}
             className="z-20 relative rotate-3 block hover:scale-125 hover:rotate-12 transition duration-500"
           >
-            <img
-              src="https://imagedelivery.net/GHaKR5yPkym5rFlXe0JpNw/e9918f26-2805-458a-e85a-dd98c3d14900/detail"
-              alt="Rusty the Dog"
+            <Image
+              src={GetUrlForAnimalMedia(image)}
+              alt={`${animal.name} the ${species === AnimalSpecies.CAT ? 'Cat' : 'Dog'}`}
               className="block mx-auto rounded-3xl border filter shadow"
+              width={400}
+              height={400}
             />
             <span className="block mt-3 text-2xl z-40">
-              Dog of the Day:{' '}
-              <strong className="font-bold text-secondary">Rusty</strong>
+              {species === AnimalSpecies.CAT ? 'Cat' : 'Dog'} of the Day:{' '}
+              <strong className="font-bold text-secondary">{animal.name}</strong>
             </span>
           </Link>
-        </div>
+        </div>}
       </div>
     </header>
   );
