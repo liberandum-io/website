@@ -9,7 +9,7 @@ import {
 } from '@/app/api/partners/route';
 
 import { BASE_URL, PARTNER_MAP, SEARCHES } from './config';
-import getAnimalDetails from './getAnimalDetails';
+import getAnimalDetails, { getReferenceFromAnimal } from './getAnimalDetails';
 import getListOfAnimals from './getListOfAnimals';
 
 export default async function Battersea() {
@@ -54,6 +54,7 @@ export default async function Battersea() {
 
     // Process each animal.
     for (const animal of animals) {
+      console.log("Getting " + getReferenceFromAnimal(animal));
       await upsertAnimal(
         await getAnimalDetails(species, animal, partnersByWebsite)
       );

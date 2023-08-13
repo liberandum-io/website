@@ -96,14 +96,18 @@ export default async function upsertAnimal(
       continue;
     }
 
-    mediaToCreate.push({
-      type: AnimalMediaType.IMAGE,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      name: image.name,
-      source: image.source,
-      location: await saveImage(animal, image),
-    });
+    try {
+      mediaToCreate.push({
+        type: AnimalMediaType.IMAGE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        name: image.name,
+        source: image.source,
+        location: await saveImage(animal, image),
+      });
+    } catch (e) {
+      // do nothing...
+    }
   }
 
   const mediaToDelete = animal.media.filter(

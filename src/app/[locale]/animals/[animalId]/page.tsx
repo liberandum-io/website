@@ -44,6 +44,10 @@ export async function generateMetadata(
 
 export default async function AnimalViewPage(props: AnimalPageProps) {
   const animal = await getAnimal(props.params.animalId);
+  const image = animal.media.filter(
+    (media) => media.type === AnimalMediaType.IMAGE
+  )[0]?.location ?? process.env.NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE;
+
   return (
     <>
       <PageTitle
@@ -61,9 +65,7 @@ export default async function AnimalViewPage(props: AnimalPageProps) {
           },
         ]}
         image={
-          GetUrlForAnimalMedia(animal.media.filter(
-            (media) => media.type === AnimalMediaType.IMAGE
-          )[0]?.location)
+          GetUrlForAnimalMedia(image)
         }
       />
       <PageBody>

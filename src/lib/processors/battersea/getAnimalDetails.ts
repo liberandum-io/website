@@ -12,7 +12,7 @@ import type { UpsertAnimalSchema } from '@/lib/validations/animals';
 import type { BatterseaAnimal } from './config';
 import { BASE_URL, PARTNER_MAP } from './config';
 
-function getReferenceFromAnimal(animal: BatterseaAnimal): string {
+export function getReferenceFromAnimal(animal: BatterseaAnimal): string {
   return `${BASE_URL}${animal.path}`;
 }
 
@@ -28,7 +28,7 @@ export default async function processPage(
   }
 
   // Load the Page
-  const response = await fetch(`${reference}`);
+  const response = await fetch(reference);
   const body = await response.text();
   const content = cheerioLoad(body);
 

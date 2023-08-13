@@ -5,7 +5,7 @@ export default function GetUrlForAnimalMedia(url: string, size: MediaSize = 'det
     return url
       .replace(
         process.env.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID!,
-        process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH!
+        process.env.NEXT_CLOUDFLARE_ACCOUNT_HASH!
       )
       .replace(
         'cloudflare-images://',
