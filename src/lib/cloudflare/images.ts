@@ -1,5 +1,5 @@
 export type CloudflareImageResponse = {
-  result: CloudflareImage,
+  result: CloudflareImage | undefined,
   success: boolean,
   errors?: any[] | null,
   messages?: any[] | null,
@@ -40,6 +40,7 @@ export default async function UploadToCloudflareImages(
   const content = await response.text();
 
   try {
+    console.log(JSON.parse(content));
     return JSON.parse(content);
   } catch (e) {
     console.error(content);

@@ -23,7 +23,8 @@ export default async function rspcaFetch(
   payload: string | { [key: string]: string } | undefined,
   cookies: string | undefined = undefined
 ) {
-  const request = {
+  return fetch(url, {
+    next: { revalidate: 3600 },
     headers: {
       accept: 'text/html',
       'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
@@ -33,9 +34,7 @@ export default async function rspcaFetch(
     },
     body: getPayloadForParams(payload),
     method: payload === undefined ? 'GET' : 'POST',
-  };
-
-  return fetch(url, request);
+  });
 }
 
 export async function getSessionCookies(): Promise<string> {

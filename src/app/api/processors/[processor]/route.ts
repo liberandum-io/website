@@ -6,7 +6,7 @@ import DogsTrust from '@/lib/processors/dogs-trust';
 import Nawt from '@/lib/processors/nawt';
 import Rspca from '@/lib/processors/rspca';
 
-const processors = {
+export const processors = {
   battersea: Battersea,
   bluecross: Bluecross,
   'dogs-trust': DogsTrust,

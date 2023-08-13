@@ -47,7 +47,7 @@ export default async function getAnimalDetails(
   }
 
   // Load the Page
-  const response = await fetch(`${reference}`);
+  const response = await fetch(`${reference}`, { next: { revalidate: 3600 } });
   const body = await response.text();
   const content = cheerioLoad(body);
 

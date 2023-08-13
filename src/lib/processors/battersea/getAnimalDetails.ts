@@ -28,7 +28,7 @@ export default async function processPage(
   }
 
   // Load the Page
-  const response = await fetch(reference);
+  const response = await fetch(reference, { next: { revalidate: 3600 } });
   const body = await response.text();
   const content = cheerioLoad(body);
 
@@ -95,6 +95,8 @@ export default async function processPage(
   const images = content('img.slideshow_image')
     .toArray()
     .map((element) => element.attribs?.src);
+
+  console.log({ images })
 
   const description = NodeHtmlMarkdown.translate(
     content('.animal_additional_details > div').html() || ''

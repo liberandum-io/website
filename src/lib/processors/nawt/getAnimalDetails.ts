@@ -22,7 +22,7 @@ export default async function getAnimalDetails(
   }
 
   // Load the Page
-  const response = await fetch(`${BASE_URL}${nawtAnimal.url}`);
+  const response = await fetch(`${BASE_URL}${nawtAnimal.url}`, { next: { revalidate: 3600 } });
   const body = await response.text();
   const content = cheerioLoad(body);
   const description = NodeHtmlMarkdown.translate(

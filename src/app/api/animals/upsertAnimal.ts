@@ -10,16 +10,20 @@ async function saveImage(animal: Pick<Animal, "id">, image: {
   url: string,
   source: string,
 }): Promise<string> {
-  const result = (await UploadToCloudflareImages(
+  const response = await UploadToCloudflareImages(
     image.source,
     {
       name: image.name!,
       source: image.source,
       animalId: animal.id,
     }
-  )).result;
+  );
 
-  return `cloudflare-images://${process.env.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID}/${result.id}`;
+  if (response.success !== true || !response.result) {
+    throw new Error(JSON.stringify(response.errors));
+  }
+
+  return `cloudflare-images://${process.env.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID}/${response.result.id}`;
 }
 
 export default async function upsertAnimal(
@@ -107,6 +111,7 @@ export default async function upsertAnimal(
       });
     } catch (e) {
       // do nothing...
+      console.warn("error saving image to cloudflare-images", e);
     }
   }
 

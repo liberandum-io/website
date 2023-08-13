@@ -14,7 +14,8 @@ export default async function getBranches(): Promise<
   ReturnType<typeof mapBranch>[]
 > {
   const response = await fetch(
-    `${BASE_URL}/page-data/rehoming/our-centres/page-data.json`
+    `${BASE_URL}/page-data/rehoming/our-centres/page-data.json`,
+    { next: { revalidate: 3600 } }
   );
   const body = await response.json();
   const results = body?.result?.data?.allNodeCentre?.nodes ?? [];

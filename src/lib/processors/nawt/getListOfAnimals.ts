@@ -95,7 +95,7 @@ export default async function getListOfAnimals(
   do {
     // Load the page.
     validLinksCount = 0;
-    const response = await fetch(`${BASE_URL}${url}?page=${page}`);
+    const response = await fetch(`${BASE_URL}${url}?page=${page}`, { next: { revalidate: 3600 } });
     const body = await response.text();
     const content = cheerioLoad(body);
     const animalBlocks = content('.page-cards__card.medium').toArray();

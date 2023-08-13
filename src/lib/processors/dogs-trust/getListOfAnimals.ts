@@ -45,6 +45,7 @@ export default async function getListOfAnimals(
 
     // Load the page.
     const response = await fetch(`${BASE_URL}${url}`, {
+      next: { revalidate: 3600 },
       method: 'POST',
       headers: {
         'content-type': 'application/json',

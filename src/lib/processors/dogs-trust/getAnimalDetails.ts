@@ -50,7 +50,8 @@ export default async function getAnimalDetails(
 
   // Load the Page
   const response = await fetch(
-    `${BASE_URL}/page-data${dogstrustAnimal.url}/page-data.json`
+    `${BASE_URL}/page-data${dogstrustAnimal.url}/page-data.json`,
+    { next: { revalidate: 3600 } }
   );
   const body = (await response.json()) as getAnimalDetailsResponseType;
 
