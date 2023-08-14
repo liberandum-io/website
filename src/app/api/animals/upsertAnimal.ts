@@ -101,6 +101,7 @@ export default async function upsertAnimal(
     }
 
     try {
+      console.log('Saving image to cloudflare-images');
       mediaToCreate.push({
         type: AnimalMediaType.IMAGE,
         createdAt: new Date(),
@@ -116,8 +117,13 @@ export default async function upsertAnimal(
   }
 
   const mediaToDelete = animal.media.filter(
-    (media) => mediaToKeep.includes(media.id)
+    (media) => !mediaToKeep.includes(media.id)
   ).map(media => media.id);
+
+  console.log({
+    mediaToCreate,
+    mediaToDelete
+  });
 
   await prisma.animal.update({
     data: {

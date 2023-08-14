@@ -92,12 +92,11 @@ export default async function getAnimalDetails(
   }
 
   // .info-panel > dl > div > dd > a
-  const partnerLink = content('.info-panel > dl > div > dd > a').get(0)?.attribs
+  const partnerLink = content('.info-panel > dl > div > dd > a[hreflang=en]').get(0)?.attribs
     .href as string;
   partner =
     partnersByWebsite[partnerLink] ??
     partnersByWebsite[`${BASE_URL}${partnerLink}`];
-  console.log(reference);
   if (!partner) {
     throw new Error(
       `Unable to get partner: ${partnerLink} (${Object.keys(
@@ -115,7 +114,7 @@ export default async function getAnimalDetails(
     name = (name.split('(&')[0] as string).replace(/\s+/, ' ').trim();
   }
 
-  const images: string[] = content('.c-hero-gallery__item img')
+  const images: string[] = content('.splide__slide.m-slide.m-slide--image img')
     .toArray()
     .map((element) => {
       let bestImageSrc: string = element.attribs?.src as string;

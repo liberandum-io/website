@@ -1,4 +1,4 @@
-import type { AnimalSpecies } from '@prisma/client';
+import { AnimalSpecies } from '@prisma/client';
 import { PartnerType } from '@prisma/client';
 
 import upsertAnimal from '@/app/api/animals/upsertAnimal';

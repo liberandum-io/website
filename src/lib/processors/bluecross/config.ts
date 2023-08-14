@@ -132,4 +132,13 @@ export const PARTNER_MAP = {
     website: `${BASE_URL}/hertfordshire-kimpton-rehoming-centre`,
     email: 'hertfordshire@bluecross.org.uk',
   },
+  'rolleston': {
+    name: 'Rolleston',
+    locationName: 'Hilda Archer Sanctuary, Dovecliff Road, Rolleston-on-Dove, DE13 9AU',
+    locationLat: 52.842098837,
+    locationLng: -1.62686703125,
+    phone: '0300 777 1846',
+    website: `${BASE_URL}/staffordshire-rolleston-rehoming-centre`,
+    email: 'rolleston@bluecross.org.uk',
+  },
 } as const;

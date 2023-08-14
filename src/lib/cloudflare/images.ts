@@ -24,8 +24,6 @@ export default async function UploadToCloudflareImages(
   body.append("metadata", JSON.stringify(metadata));
   body.append("requireSignedURLs", "false");
 
-  console.log(`https://api.cloudflare.com/client/v4/accounts/${process.env.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID}/images/v1`);
-
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${process.env.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID}/images/v1`,
     {
@@ -40,7 +38,6 @@ export default async function UploadToCloudflareImages(
   const content = await response.text();
 
   try {
-    console.log(JSON.parse(content));
     return JSON.parse(content);
   } catch (e) {
     console.error(content);
