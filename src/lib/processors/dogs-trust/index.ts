@@ -1,5 +1,6 @@
 import type { AnimalSpecies } from '@prisma/client';
 import { PartnerType } from '@prisma/client';
+import { PromisePool } from '@supercharge/promise-pool';
 
 import upsertAnimal from '@/app/api/animals/upsertAnimal';
 import {
@@ -57,14 +58,16 @@ export default async function DogsTrust(species: AnimalSpecies) {
     const animals = await getListOfAnimals(url);
 
     // Process each animal.
-    for (const animal of animals) {
-      console.log("Updating " + animal.url);
-      await upsertAnimal(
-        await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
-      );
+    await PromisePool
+      .withConcurrency(3)
+      .for(animals)
+      .process(async (animal) => {
+        await upsertAnimal(
+          await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
+        );
 
-      result.animals++;
-    }
+        result.animals++;
+      });
   }
 
   return result;

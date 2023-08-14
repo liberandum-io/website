@@ -1,5 +1,6 @@
 import type { AnimalSpecies } from '@prisma/client';
 import { PartnerType } from '@prisma/client';
+import { PromisePool } from '@supercharge/promise-pool';
 
 import upsertAnimal from '@/app/api/animals/upsertAnimal';
 import {
@@ -55,14 +56,16 @@ export default async function Battersea(species: AnimalSpecies) {
     const animals = await getListOfAnimals(url);
 
     // Process each animal.
-    for (const animal of animals) {
-      console.log("Getting " + getReferenceFromAnimal(animal));
-      await upsertAnimal(
-        await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
-      );
+    await PromisePool
+      .withConcurrency(3)
+      .for(animals)
+      .process(async (animal) => {
+        await upsertAnimal(
+          await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
+        );
 
-      result.animals++;
-    }
+        result.animals++;
+      });
 
     // @todo what about those that were not in the list...
   }

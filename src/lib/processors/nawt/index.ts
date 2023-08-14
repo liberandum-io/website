@@ -1,5 +1,6 @@
 import type { AnimalSpecies, Partner } from '@prisma/client';
 import { PartnerType } from '@prisma/client';
+import { PromisePool } from '@supercharge/promise-pool';
 
 import upsertAnimal from '@/app/api/animals/upsertAnimal';
 import {
@@ -55,20 +56,16 @@ export default async function Nawt(species: AnimalSpecies) {
     const animals = await getListOfAnimals(url);
 
     // Process each animal.
-    for (const animal of animals) {
-      try {
-        const details = await getAnimalDetails(
-          urlSpecies,
-          animal,
-          partnersByEmail
+    await PromisePool
+      .withConcurrency(3)
+      .for(animals)
+      .process(async (animal) => {
+        await upsertAnimal(
+          await getAnimalDetails(urlSpecies, animal, partnersByEmail)
         );
-        await upsertAnimal(details);
 
         result.animals++;
-      } catch (e) {
-        console.warn(e);
-      }
-    }
+      });
   }
 
   return result;
