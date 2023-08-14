@@ -1,0 +1,100 @@
+name: Run Crons
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '10 9,14,18 * * *'
+
+jobs:
+  scheduled:
+    runs-on: node-lts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup Prisma
+        run: pnpm prisma generate
+
+      - name: Build NextJS
+        run: pnpm run build
+
+      - name: Start NextJS
+        run: pnpm run start & sleep 10
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID: ${{ secrets.NEXT_CLOUDFLARE_IMAGE_ACCOUNT_ID }}
+          NEXT_CLOUDFLARE_IMAGE_API_KEY: ${{ secrets.NEXT_CLOUDFLARE_IMAGE_API_KEY }}
+          NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE: ${{ env.NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE }}
+          NEXT_CLOUDFLARE_ACCOUNT_HASH: ${{ env.NEXT_CLOUDFLARE_ACCOUNT_HASH }}
+
+      - name: "Import Animals: Battersea Dogs"
+        run: wget http://localhost:3000/api/processors/battersea/DOG
+        
+      - name: "Import Animals: Battersea Cats"
+        run: wget http://localhost:3000/api/processors/battersea/CAT
+        
+      - name: "Import Animals: Battersea Rabbits"
+        run: wget http://localhost:3000/api/processors/battersea/RABBIT
+
+      - name: "Import Animals: Bluecross Dogs"
+        run: wget http://localhost:3000/api/processors/bluecross/DOG
+        
+      - name: "Import Animals: Bluecross Cats"
+        run: wget http://localhost:3000/api/processors/bluecross/CAT
+        
+      - name: "Import Animals: Bluecross Rabbits"
+        run: wget http://localhost:3000/api/processors/bluecross/RABBIT
+
+      - name: "Import Animals: Dogs Trust Dogs"
+        run: wget http://localhost:3000/api/processors/dogs-trust/DOG
+        
+      - name: "Import Animals: Dogs Trust Cats"
+        run: wget http://localhost:3000/api/processors/dogs-trust/CAT
+        
+      - name: "Import Animals: Dogs Trust Rabbits"
+        run: wget http://localhost:3000/api/processors/dogs-trust/RABBIT
+
+      - name: "Import Animals: NAWT Dogs"
+        run: wget http://localhost:3000/api/processors/nawt/DOG
+        
+      - name: "Import Animals: NAWT Cats"
+        run: wget http://localhost:3000/api/processors/nawt/CAT
+        
+      - name: "Import Animals: NAWT Rabbits"
+        run: wget http://localhost:3000/api/processors/nawt/RABBIT
+
+      # - name: "Import Animals: RSPCA Dogs"
+      #   run: wget http://localhost:3000/api/processors/rspca/DOG
+        
+      # - name: "Import Animals: RSPCA Cats"
+      #   run: wget http://localhost:3000/api/processors/rspca/CAT
+        
+      # - name: "Import Animals: RSPCA Rabbits"
+      #   run: wget http://localhost:3000/api/processors/rspca/RABBIT
