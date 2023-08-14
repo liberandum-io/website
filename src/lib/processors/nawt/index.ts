@@ -12,7 +12,7 @@ import { BASE_URL, FRIENDLY_NAME, PARTNER_MAP, SEARCHES } from './config';
 import getAnimalDetails from './getAnimalDetails';
 import getListOfAnimals from './getListOfAnimals';
 
-export default async function Nawt() {
+export default async function Nawt(species: AnimalSpecies) {
   // Load the Config for this partner.
   let rootPartner = await getPartnerByWebsite(BASE_URL);
   if (!rootPartner) {
@@ -44,10 +44,12 @@ export default async function Nawt() {
   }
 
   // Process each supported species.
-  const result: Partial<Record<AnimalSpecies, number>> = {};
+  const result = { animals: 0 };
   for (const url of Object.keys(SEARCHES) as (keyof typeof SEARCHES)[]) {
-    const species: AnimalSpecies = SEARCHES[url];
-    result[species] = 0;
+    const urlSpecies = SEARCHES[url];
+    if (urlSpecies !== species) {
+      continue;
+    }
 
     // Get outline data from source.
     const animals = await getListOfAnimals(url);
@@ -56,13 +58,13 @@ export default async function Nawt() {
     for (const animal of animals) {
       try {
         const details = await getAnimalDetails(
-          species,
+          urlSpecies,
           animal,
           partnersByEmail
         );
         await upsertAnimal(details);
 
-        result[species]!++;
+        result.animals++;
       } catch (e) {
         console.warn(e);
       }

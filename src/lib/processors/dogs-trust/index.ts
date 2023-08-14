@@ -13,7 +13,7 @@ import getAnimalDetails from './getAnimalDetails';
 import getBranches from './getBranches';
 import getListOfAnimals from './getListOfAnimals';
 
-export default async function DogsTrust() {
+export default async function DogsTrust(species: AnimalSpecies) {
   // Load the Config for this partner.
   let rootPartner = await getPartnerByWebsite(BASE_URL);
   if (!rootPartner) {
@@ -45,10 +45,12 @@ export default async function DogsTrust() {
   }
 
   // Process each supported species.
-  const result: Partial<Record<AnimalSpecies, number>> = {};
+  const result = { animals: 0 };
   for (const url of Object.keys(SEARCHES) as (keyof typeof SEARCHES)[]) {
-    const species: AnimalSpecies = SEARCHES[url];
-    result[species] = 0;
+    const urlSpecies = SEARCHES[url];
+    if (urlSpecies !== species) {
+      continue;
+    }
 
     // Get outline data from source.
     console.log("Getting " + url);
@@ -58,10 +60,10 @@ export default async function DogsTrust() {
     for (const animal of animals) {
       console.log("Updating " + animal.url);
       await upsertAnimal(
-        await getAnimalDetails(species, animal, partnersByWebsite)
+        await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
       );
 
-      result[species]++;
+      result.animals++;
     }
   }
 

@@ -13,7 +13,7 @@ import getAnimalDetails from './getAnimalDetails';
 import getListOfAnimals from './getListOfAnimals';
 import { getSessionCookies } from './rspcaFetch';
 
-export default async function Rspca() {
+export default async function Rspca(species: AnimalSpecies) {
   // Load the Config for this partner.
   let rootPartner = await getPartnerByWebsite(BASE_URL);
   if (!rootPartner) {
@@ -47,10 +47,12 @@ export default async function Rspca() {
   const cookies = await getSessionCookies();
 
   // Process each supported species.
-  const result: Partial<Record<AnimalSpecies, number>> = {};
-  for (const species of Object.keys(SEARCHES) as (keyof typeof SEARCHES)[]) {
-    const searchSettings = SEARCHES[species];
-    result[species] = 0;
+  const result = { animals: 0 };
+  for (const urlSpecies of Object.keys(SEARCHES) as (keyof typeof SEARCHES)[]) {
+    if (urlSpecies !== species) {
+      continue;
+    }
+    const searchSettings = SEARCHES[urlSpecies];
 
     // Get outline data from source.
     const animals = await getListOfAnimals(searchSettings, cookies);
@@ -59,14 +61,14 @@ export default async function Rspca() {
     for (const animal of animals) {
       try {
         const details = await getAnimalDetails(
-          species,
+          urlSpecies,
           animal,
           partnersByEmail,
           cookies
         );
         await upsertAnimal(details);
 
-        result[species]!++;
+        result.animals++;
       } catch (e) {
         console.warn(e);
       }

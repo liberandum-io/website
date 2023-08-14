@@ -5,6 +5,7 @@ import Bluecross from '@/lib/processors/bluecross';
 import DogsTrust from '@/lib/processors/dogs-trust';
 import Nawt from '@/lib/processors/nawt';
 import Rspca from '@/lib/processors/rspca';
+import { AnimalSpecies } from '@prisma/client';
 
 export const processors = {
   battersea: Battersea,
@@ -16,16 +17,16 @@ export const processors = {
 
 export async function GET(
   request: Request,
-  context: { params: { processor: string } }
+  context: { params: { processor: string, species: AnimalSpecies } }
 ) {
-  const { processor } = context.params;
-  if (!(processor in processors)) {
+  const { processor, species } = context.params;
+  if (!(processor in processors) || !(species in AnimalSpecies)) {
     return NextResponse.json({
       ok: false,
     });
   }
 
-  const result = await processors[processor as keyof typeof processors]();
+  const result = await processors[processor as keyof typeof processors](species);
 
   return NextResponse.json({
     ok: true,

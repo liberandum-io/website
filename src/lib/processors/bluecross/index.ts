@@ -12,7 +12,7 @@ import { BASE_URL, PARTNER_MAP, SEARCHES } from './config';
 import getAnimalDetails from './getAnimalDetails';
 import getListOfAnimals from './getListOfAnimals';
 
-export default async function Bluecross() {
+export default async function Bluecross(species: AnimalSpecies) {
   // Load the Config for this partner.
   let rootPartner = await getPartnerByWebsite(BASE_URL);
   if (!rootPartner) {
@@ -44,10 +44,12 @@ export default async function Bluecross() {
   }
 
   // Process each supported species.
-  const result: Partial<Record<AnimalSpecies, number>> = {};
+  const result = { animals: 0 };
   for (const url of Object.keys(SEARCHES) as (keyof typeof SEARCHES)[]) {
-    const species: AnimalSpecies = SEARCHES[url];
-    result[species] = 0;
+    const urlSpecies = SEARCHES[url];
+    if (urlSpecies !== species) {
+      continue;
+    }
 
     // Get outline data from source.
     const animals = await getListOfAnimals(url);
@@ -55,10 +57,10 @@ export default async function Bluecross() {
     // Process each animal.
     for (const animal of animals) {
       await upsertAnimal(
-        await getAnimalDetails(species, animal, partnersByWebsite)
+        await getAnimalDetails(urlSpecies, animal, partnersByWebsite)
       );
 
-      result[species]!++;
+      result.animals++;
     }
   }
 
