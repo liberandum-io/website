@@ -7,7 +7,7 @@ on:
 
 jobs:
   scheduled:
-    runs-on: node-lts
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
