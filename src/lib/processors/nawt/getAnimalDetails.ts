@@ -22,6 +22,7 @@ export default async function getAnimalDetails(
   }
 
   // Load the Page
+  console.log(`${BASE_URL}${nawtAnimal.url}`)
   const response = await fetch(`${BASE_URL}${nawtAnimal.url}`, { next: { revalidate: 3600 } });
   const body = await response.text();
   const content = cheerioLoad(body);
@@ -64,15 +65,13 @@ export default async function getAnimalDetails(
     }[],
   };
 
-  for (const image of nawtAnimal.images) {
-    const imageUrl =
-      image.indexOf('://') === -1 ? `${BASE_URL}${image}` : image;
-
+  content('div[data-image]').each((_, divImage) => {
     data.images.push({
-      url: imageUrl,
-      source: imageUrl,
+      name: undefined,
+      url: divImage.attribs?.['data-image'],
+      source: divImage.attribs?.['data-image'],
     });
-  }
+  });
 
   // Success!
   return data;
