@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.3.0
     version: 2.3.0(react@18.2.0)
   '@next/mdx':
-    specifier: ^13.4.16
-    version: 13.4.16(@mdx-js/loader@2.3.0)(@mdx-js/react@2.3.0)
+    specifier: ^13.4.18
+    version: 13.4.18(@mdx-js/loader@2.3.0)(@mdx-js/react@2.3.0)
   '@prisma/client':
     specifier: ^5.1.1
     version: 5.1.1(prisma@5.1.1)
@@ -804,8 +804,8 @@ packages:
     resolution: {integrity: sha512-pCU0sJBqdfKP9mwDadxvZd+eLz3fZrTlmmDHY12Hdpl3DD0vy8ou5HWKVfG0zZS6tqhL4wnQqRbspdY5nqa7MA==}
     dev: false
 
-  /@next/mdx@13.4.16(@mdx-js/loader@2.3.0)(@mdx-js/react@2.3.0):
-    resolution: {integrity: sha512-4Yas2f0DFSi1BbtCAaMiv/EdGrBfflMEGBQf/QVAnVISihp/HwXiNhVN7wAt29vN9Mo/J4PtCKt8HQTYD7jbiA==}
+  /@next/mdx@13.4.18(@mdx-js/loader@2.3.0)(@mdx-js/react@2.3.0):
+    resolution: {integrity: sha512-0jJs01MJgx84+rLrP53iCWs6Ug4hO+ys2tjwh/gq7W2OJ85sCR6IExDLHyLIwdEYfB3COKQ/TmG7MIf3j4cUQA==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
       '@mdx-js/react': '>=0.15.0'
