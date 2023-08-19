@@ -22,7 +22,7 @@
     "cheerio": "1.0.0-rc.12",
     "date-fns": "^2.30.0",
     "next": "^13.4.18",
-    "next-intl": "3.0.0-beta.9",
+    "next-intl": "3.0.0-beta.10",
     "next-mdx-remote": "^4.4.1",
     "node-html-markdown": "^1.3.0",
     "pigeon-maps": "^0.21.3",
