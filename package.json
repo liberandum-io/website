@@ -15,7 +15,7 @@
     "@supercharge/promise-pool": "^3.0.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/mdx": "^2.0.6",
-    "@types/node": "^20.5.1",
+    "@types/node": "^20.5.4",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.15",
