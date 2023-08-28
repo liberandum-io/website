@@ -8,7 +8,7 @@ const url = 'https://imagedelivery.net/'
 export default function Image (props: ImageProps & {src: string}) {
   return <NextImage
     {...props}
-    loader={(props: ImageLoaderProps) => {
+    loader={props.src.endsWith('/dynamic') ? (props: ImageLoaderProps) => {
       if (!props.src.startsWith(universialId)
         && !props.src.startsWith(url)
       ) {
@@ -25,7 +25,7 @@ export default function Image (props: ImageProps & {src: string}) {
       }
     
       return props.src.replace(universialId, url).replace('/detail', '/') + params.join(',') + '?success=true';
-    }}
+    } : undefined}
     src={
       props.src
     }

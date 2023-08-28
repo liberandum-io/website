@@ -133,23 +133,23 @@ export async function getQueryFromInput(
       },
     }));
   }
-  if (data.where?.medicalNeeds === true || data.where?.medicalNeeds === "true") {
+  if (data.where?.medicalNeeds === true) {
     query.where.medicalNeeds = true;
   }
-  if (data.where?.medicalNeeds === false || data.where?.medicalNeeds === "false") {
+  if (data.where?.medicalNeeds === false) {
     query.where.medicalNeeds = false;
   }
 
-  if (data.where?.friendlyToCats === true || data.where?.friendlyToCats === "true") {
+  if (data.where?.friendlyToCats === true) {
     query.where.friendlyToCats = true;
   }
-  if (data.where?.friendlyToCats === false || data.where?.friendlyToCats === "false") {
+  if (data.where?.friendlyToCats === false) {
     query.where.friendlyToCats = { not: true };
   }
-  if (data.where?.friendlyToDogs === true || data.where?.friendlyToDogs === "true") {
+  if (data.where?.friendlyToDogs === true) {
     query.where.friendlyToDogs = true;
   }
-  if (data.where?.friendlyToDogs === false || data.where?.friendlyToDogs === "false") {
+  if (data.where?.friendlyToDogs === false) {
     query.where.friendlyToDogs = { not: true };
   }
   if (typeof data.where?.friendlyToHumans === 'number') {

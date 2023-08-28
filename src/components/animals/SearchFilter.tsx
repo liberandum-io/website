@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -27,6 +27,7 @@ export default function SearchFilter(props: {
   name: string;
   options: { [key: string]: number };
 }) {
+  const router = useRouter();
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [postcode, setPostcode] = useState<string>(
@@ -59,7 +60,9 @@ export default function SearchFilter(props: {
       </h6>
       <ul className={postcodeMode && postcode.length > 5 ? 'hidden' : ''}>
         {Object.keys(props.options).map((optionName) => {
-          const routerQuery: string[] = searchParams.getAll(props.name);
+          const routerQuery: string[] = searchParams.getAll(props.name+'[]').length > 0 
+            ? searchParams.getAll(props.name+'[]')
+            : searchParams.getAll(props.name);
           const checked = routerQuery.indexOf(optionName) !== -1;
 
           return (
@@ -81,18 +84,33 @@ export default function SearchFilter(props: {
                     }
                     value = value.sort((a, b) => (a > b ? 1 : -1));
 
-                    const newQuery = {
-                      // ...searchParams.entries(),
-                      [props.name]: value,
-                    };
-
-                    if (value.length < 1) {
-                      delete newQuery[props.name];
+                    const newQuery: Record<string, string[]> = {};
+                    // @ts-ignore
+                    for (const entry of searchParams.entries()) {
+                      newQuery[entry[0]] = [
+                        ...(newQuery[entry[0]] ?? []),
+                        entry[1] as string
+                      ];
                     }
 
-                    // Router.push('@todo', undefined, {
-                    //   scroll: false,
-                    // });
+                    if (value.length > 0) {
+                      newQuery[props.name] = value;
+                    }
+
+                    delete newQuery.page;
+
+                    const newSearchParams: string[] = [];
+                    for (const key of Object.keys(newQuery)) {
+                      for (const queryValue of newQuery[key]) {
+                        newSearchParams.push(
+                          (newQuery[key].length > 1 ? key + '[]' : key).replace(/\[\]\[\]/g, '[]')
+                            + '='
+                            + encodeURIComponent(queryValue)
+                        );
+                      }
+                    }
+
+                    router.push('/animals?' + newSearchParams.join('&'), { scroll: false });
                   }}
                 />{' '}
                 {getTranslatedOptionName(t, props.name, optionName)}

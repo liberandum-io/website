@@ -54,8 +54,10 @@ export default function AnimalListing(props: AnimalListingProps) {
             width={350}
             className="block group-hover:scale-125 group-hover:rotate-6 transition duration-500 object-cover w-full"
             src={
-              GetUrlForAnimalMedia(animal.media.find((media => media.type === AnimalMediaType.IMAGE))?.location
-                ?? process.env.NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE!)
+              GetUrlForAnimalMedia(
+                animal.media.find((media => media.type === AnimalMediaType.IMAGE))?.location?? process.env.NEXT_PUBLIC_DEFAULT_ANIMAL_IMAGE!,
+                'listing'
+              )
             }
             alt=""
           />

@@ -1,6 +1,6 @@
-type MediaSize = "detail"
+type MediaSize = "detail" | "listing" | "dynamic"
 
-export default function GetUrlForAnimalMedia(url: string, size: MediaSize = 'detail'): string {
+export default function GetUrlForAnimalMedia(url: string, size: MediaSize = 'dynamic'): string {
   if (url.startsWith('cloudflare-images://')) {
     return url
       .replace(

@@ -55,19 +55,10 @@ export const GetAnimals = z
           z.string().min(1).max(255),
           z.string().min(1).max(255).array(),
         ]).optional(),
-        medicalNeeds: z.union([
-          z.boolean(),
-          z.enum(['true', 'false']),
-        ]).optional(),
-        friendlyToCats: z.union([
-          z.boolean(),
-          z.enum(['true', 'false']),
-        ]).optional(),
-        friendlyToDogs: z.union([
-          z.boolean(),
-          z.enum(['true', 'false']),
-        ]).optional(),
-        friendlyToHumans: z.number().min(0).max(30).optional(),
+        medicalNeeds: z.coerce.boolean().optional(),
+        friendlyToCats: z.coerce.boolean().optional(),
+        friendlyToDogs: z.coerce.boolean().optional(),
+        friendlyToHumans: z.coerce.number().min(0).max(30).optional(),
       })
       .optional(),
     orderBy: z
