@@ -26,7 +26,7 @@
     "next-mdx-remote": "^4.4.1",
     "node-html-markdown": "^1.3.0",
     "pigeon-maps": "^0.21.3",
-    "postcss": "^8.4.28",
+    "postcss": "^8.4.29",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
